@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, API_URL } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { 
   Plus, 
@@ -75,7 +75,7 @@ export default function TasksPage() {
     setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "done" as const } : t));
 
     try {
-      const res = await apiCall(`http://localhost:8000/tasks/${taskId}`, {
+      const res = await apiCall(`${API_URL}/tasks/${taskId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "done" })
@@ -96,7 +96,7 @@ export default function TasksPage() {
   const handleDeleteTask = async (taskId: string) => {
     if (!token || !confirm("Are you sure?")) return;
     try {
-      const res = await apiCall(`http://localhost:8000/tasks/${taskId}`, {
+      const res = await apiCall(`${API_URL}/tasks/${taskId}`, {
         method: "DELETE"
       });
       if (res.ok) {
@@ -149,7 +149,7 @@ export default function TasksPage() {
     }
 
     try {
-      const res = await apiCall(`http://localhost:8000/tasks?${params.toString()}`);
+      const res = await apiCall(`${API_URL}/tasks?${params.toString()}`);
       
       if (res.ok) {
         const data = await res.json();

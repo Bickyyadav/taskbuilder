@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 interface User {
   id: string;
   email: string;
@@ -49,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = useCallback(async (authToken: string) => {
     try {
-      const res = await fetch("http://localhost:8000/api/users/me", {
+      const res = await fetch(`${API_URL}/api/users/me`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       if (res.ok) {
@@ -81,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     formData.append("username", email);
     formData.append("password", password);
 
-    const res = await fetch("http://localhost:8000/auth/login", {
+    const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formData.toString(),
@@ -99,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signup = async (email: string, password: string) => {
-    const res = await fetch("http://localhost:8000/auth/signup", {
+    const res = await fetch(`${API_URL}/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

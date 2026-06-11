@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, API_URL } from "@/context/AuthContext";
 import { Loader2, X, AlertCircle } from "lucide-react";
 
 interface Task {
@@ -106,7 +106,7 @@ export default function TaskFormModal({ isOpen, onClose, onSuccess, task = null 
     };
 
     const isEdit = !!task;
-    const url = isEdit ? `http://localhost:8000/tasks/${task.id}` : "http://localhost:8000/tasks";
+    const url = isEdit ? `${API_URL}/tasks/${task.id}` : `${API_URL}/tasks`;
     const method = isEdit ? "PATCH" : "POST";
 
     try {

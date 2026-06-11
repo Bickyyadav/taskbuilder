@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, API_URL } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import TaskFormModal from "@/components/TaskFormModal";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -56,7 +56,7 @@ export default function Home() {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const res = await apiCall("http://localhost:8000/tasks?limit=100");
+      const res = await apiCall(`${API_URL}/tasks?limit=100`);
       if (res.ok) {
         const data = await res.json();
         setTasks(data.items || []);
@@ -100,7 +100,7 @@ export default function Home() {
     setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: "done" as const } : t));
 
     try {
-      const res = await apiCall(`http://localhost:8000/tasks/${taskId}`, {
+      const res = await apiCall(`${API_URL}/tasks/${taskId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "done" })
@@ -121,7 +121,7 @@ export default function Home() {
   const handleDeleteTask = async (taskId: string) => {
     if (!token || !confirm("Are you sure?")) return;
     try {
-      const res = await apiCall(`http://localhost:8000/tasks/${taskId}`, {
+      const res = await apiCall(`${API_URL}/tasks/${taskId}`, {
         method: "DELETE"
       });
       if (res.ok) {
@@ -139,7 +139,7 @@ export default function Home() {
   const handleQuickStatusChange = async (task: Task, newStatus: Task["status"]) => {
     if (!token) return;
     try {
-      const res = await apiCall(`http://localhost:8000/tasks/${task.id}`, {
+      const res = await apiCall(`${API_URL}/tasks/${task.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus })
